@@ -1,0 +1,14 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Alura\\Cursos\\": "src/"
+        }
+    },
+    "require": {
+        "stripe/stripe-php": "^7.86",
+        "google/apiclient": "2.10",
+        "symfony/yaml": "2.*",
+        "doctrine/orm": "^2.6",
+        "symfony/cache": "^5.3"
+    }
+}
