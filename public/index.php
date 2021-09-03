@@ -8,6 +8,7 @@ require '../src/Controller/FormularioInsercao.php';
 
 use Alura\Cursos\Controller\FormularioInsercao;
 use Alura\Cursos\Controller\ListarCursos;
+use Alura\Cursos\Controller\Persistencia;
 
 switch ($_SERVER['REQUEST_URI']) {
     case '/listar-cursos':
@@ -17,6 +18,11 @@ switch ($_SERVER['REQUEST_URI']) {
     case '/novo-curso':
         $controlador = new FormularioInsercao();
         $controlador->processaRequisicao();
+        break;
+    case '/salvar-curso':
+        $controlador = new Persistencia();
+        $controlador->processaRequisicao();
+        echo "Salvado pacero!";
         break;
     default:
         echo "Pagina não encontrada (Error! 404)";
