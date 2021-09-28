@@ -1,25 +1,55 @@
 <?php
 
-//php -S localhost:8080 -t public 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
 
-require __DIR__ . '/../vendor/autoload.php';
-require '../src/Controller/ListarCurso.php';
-require '../src/Controller/FormularioInsercao.php';
-require '../src/Controller/Exclusao.php';
+define('LARAVEL_START', microtime(true));
 
-$caminho = explode("?", $_SERVER['REQUEST_URI']);
+/*
+|--------------------------------------------------------------------------
+| Check If The Application Is Under Maintenance
+|--------------------------------------------------------------------------
+|
+| If the application is in maintenance / demo mode via the "down" command
+| we will load this file so that any pre-rendered content can be shown
+| instead of starting the framework, which could cause an exception.
+|
+*/
 
-
-
-$rotas = require  __DIR__ . '/../config/routes.php';
-
-if (!array_key_exists($caminho[0], $rotas)) {
-    http_response_code(404);
-    exit();
+if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
+    require __DIR__.'/../storage/framework/maintenance.php';
 }
 
-//var_dump( $rotas);
-$classeControladora = $rotas[$caminho[0]];
-$controlador = new $classeControladora();
-$controlador->processaRequisicao();
-//var_dump($_SERVER['REQUEST_URI']);
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader for
+| this application. We just need to utilize it! We'll simply require it
+| into the script here so we don't need to manually load our classes.
+|
+*/
+
+require __DIR__.'/../vendor/autoload.php';
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request using
+| the application's HTTP kernel. Then, we will send the response back
+| to this client's browser, allowing them to enjoy our application.
+|
+*/
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+$kernel = $app->make(Kernel::class);
+
+$response = tap($kernel->handle(
+    $request = Request::capture()
+))->send();
+
+$kernel->terminate($request, $response);
